@@ -1,21 +1,18 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
-
-# pylint: disable=C0111,too-many-arguments,too-many-instance-attributes,too-many-locals,redefined-outer-name,fixme
-# pylint: disable=superfluous-parens, no-member, invalid-name
-import sys
-#sys.path.insert(0, "../../python")
-import cv2,random
-import mxnet as mx
-import numpy as np
 import os
-from io import BytesIO
-#from train import gen_rand, gen_sample
-chars = [u"京", u"沪", u"津", u"渝", u"冀", u"晋", u"蒙", u"辽", u"吉", u"黑", u"苏", u"浙", u"皖", u"闽", u"赣", u"鲁", u"豫", u"鄂", u"湘", u"粤", u"桂",
-             u"琼", u"川", u"贵", u"云", u"藏", u"陕", u"甘", u"青", u"宁", u"新", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A",
-             "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
+os.environ["MXNET_CUDNN_AUTOTUNE_DEFAULT"] = "0"
+import cv2
+
+import numpy as np
+import mxnet as mx
+
+chars = ["京", "沪", "津", "渝", "冀", "晋", "蒙", "辽", "吉", "黑", "苏", "浙", "皖", "闽", "赣", "鲁", "豫", "鄂", "湘", "粤", "桂",
+             "琼", "川", "贵", "云", "藏", "陕", "甘", "青", "宁", "新", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "A",
+             "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R", "S", "T", "", "V", "W", "X",
              "Y", "Z"
-             ];
+             ]
+
 def getnet():
     data = mx.symbol.Variable('data')
     label = mx.symbol.Variable('softmax_label')
@@ -47,8 +44,6 @@ def getnet():
     fc2 = mx.symbol.Concat(*[fc21, fc22, fc23, fc24,fc25,fc26,fc27], dim = 0)
     return mx.symbol.SoftmaxOutput(data = fc2, name = "softmax")
 
-
-
 def TestRecognizeOne(img):
     img = cv2.resize(img,(120,30))
     cv2.imshow("img",img);
@@ -62,7 +57,7 @@ def TestRecognizeOne(img):
     data_shape = [("data", (batch_size, 3, 30, 120))]
     input_shapes = dict(data_shape)
     sym = getnet()
-    executor = sym.simple_bind(ctx = mx.cpu(), **input_shapes)
+    executor = sym.simple_bind(ctx = mx.gpu(), **input_shapes)
     for key in executor.arg_dict.keys():
         if key in arg_params:
             arg_params[key].copyto(executor.arg_dict[key])

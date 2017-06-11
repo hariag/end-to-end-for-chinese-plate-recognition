@@ -1,4 +1,6 @@
-#coding=utf-8
+#!/usr/bin/python
+# -*- coding: utf8 -*-
+
 import PIL
 from PIL import ImageFont
 from PIL import Image
@@ -191,7 +193,7 @@ class GenPlate:
                 else:
                     plateStr += chars[31 + r(34)]
 
-        return plateStr;
+        return plateStr.decode("utf-8");
 
 
 

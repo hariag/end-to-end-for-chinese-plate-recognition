@@ -1,4 +1,5 @@
-#coding=utf-8
+#!/usr/bin/python
+# -*- coding: utf8 -*-
 # pylint: disable=C0111,too-many-arguments,too-many-instance-attributes,too-many-locals,redefined-outer-name,fixme
 # pylint: disable=superfluous-parens, no-member, invalid-name
 
